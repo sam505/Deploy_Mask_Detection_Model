@@ -44,6 +44,11 @@ def main():
 
 
 def save_uploaded_file(uploaded_file):
+    """
+
+    :param uploaded_file:
+    :return:
+    """
     with open(os.path.join("tempDir", uploaded_file.name), "wb") as f:
         f.write(uploaded_file.getbuffer())
     return None
