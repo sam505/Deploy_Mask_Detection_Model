@@ -5,17 +5,22 @@ import os
 import random
 import string
 from detect_faces import FaceDetector
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 model = tf.keras.models.load_model("models/model")
+logger.info("Loaded the Mask Detection Model...")
 
 fd = FaceDetector()
 
-st.set_page_config(page_title="Mask Detection Using Tensorflow", page_icon=None, layout='centered',
-                   initial_sidebar_state='auto')
-st.title("Mask Detection Using Tensorflow")
-
 
 def main():
+    st.set_page_config(page_title="Mask Detection Using Tensorflow", page_icon=None, layout='centered',
+                       initial_sidebar_state='auto')
+    st.title("Mask Detection Using Tensorflow")
+
     image = st.file_uploader(label="Upload an Image with your face", type=['png', 'jpg', 'jpeg'])
     button = st.button("Upload Image")
     if button and image:
@@ -51,7 +56,8 @@ def save_uploaded_file(uploaded_file):
     :param uploaded_file:
     :return:
     """
-    file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))+uploaded_file.name.split()[1]
+    file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10)) + "." + \
+                uploaded_file.name.split(".")[1]
     with open(os.path.join("tempDir", file_name), "wb") as f:
         f.write(uploaded_file.getbuffer())
     return file_name
