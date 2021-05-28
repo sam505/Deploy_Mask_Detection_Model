@@ -2,6 +2,8 @@ import tensorflow as tf
 import streamlit as st
 import cv2
 import os
+import random
+import string
 from detect_faces import FaceDetector
 
 model = tf.keras.models.load_model("models/model")
@@ -17,8 +19,8 @@ def main():
     image = st.file_uploader(label="Upload an Image with your face", type=['png', 'jpg', 'jpeg'])
     button = st.button("Upload Image")
     if button and image:
-        save_uploaded_file(image)
-        img_dir = "tempDir/" + image.name
+        name = save_uploaded_file(image)
+        img_dir = "tempDir/" + name
         img = cv2.imread(img_dir)
         face_boxes, faces_score = fd.get_faceboxes(img, 0.5)
         if len(face_boxes) == 0:
@@ -49,9 +51,10 @@ def save_uploaded_file(uploaded_file):
     :param uploaded_file:
     :return:
     """
-    with open(os.path.join("tempDir", uploaded_file.name), "wb") as f:
+    file_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))+uploaded_file.name.split()[1]
+    with open(os.path.join("tempDir", file_name), "wb") as f:
         f.write(uploaded_file.getbuffer())
-    return None
+    return file_name
 
 
 def predict(img):
