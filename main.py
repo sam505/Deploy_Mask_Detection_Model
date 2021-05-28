@@ -60,6 +60,7 @@ def save_uploaded_file(uploaded_file):
                 uploaded_file.name.split(".")[1]
     with open(os.path.join("tempDir", file_name), "wb") as f:
         f.write(uploaded_file.getbuffer())
+        logger.info("{} saved temporarily...".format(file_name))
     return file_name
 
 
