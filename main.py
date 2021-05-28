@@ -75,6 +75,11 @@ def predict(img):
 
 
 def pre_process(image):
+    """
+
+    :param image:
+    :return:
+    """
     image = cv2.resize(image, (160, 160))
     image = image.reshape(1, *image.shape)
 
