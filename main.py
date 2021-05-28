@@ -34,6 +34,7 @@ def main():
         if len(face_boxes) == 0:
             text = "Unfortunately No Face was Detected"
             st.image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+            st.text(text)
         else:
             for facebox in face_boxes:
                 face_img = img[facebox[1]: facebox[3], facebox[0]: facebox[2]]
@@ -48,14 +49,14 @@ def main():
                 else:
                     text = 'No mask'
 
-        st.text(text)
+                st.text(text)
         os.remove(img_dir)
     pass
 
 
 def save_uploaded_file(uploaded_file):
     """
-
+    Saves the uploaded image to a temporarily location with a new file name
     :param uploaded_file:
     :return:
     """
@@ -68,6 +69,11 @@ def save_uploaded_file(uploaded_file):
 
 
 def predict(img):
+    """
+    Taken the preprocessed image and gets a prediction from the trained model
+    :param img:
+    :return:
+    """
     img = pre_process(img)
     result = model.predict(img)
 
@@ -76,7 +82,7 @@ def predict(img):
 
 def pre_process(image):
     """
-
+    Preprocessing the input image to suit the input parameters of the model
     :param image:
     :return:
     """
