@@ -17,10 +17,13 @@ fd = FaceDetector()
 
 
 def main():
+    """
+    Main Function
+    :return:
+    """
     st.set_page_config(page_title="Mask Detection Using Tensorflow", page_icon=None, layout='centered',
                        initial_sidebar_state='auto')
     st.title("Mask Detection Using Tensorflow")
-
     image = st.file_uploader(label="Upload an Image with your face", type=['png', 'jpg', 'jpeg'])
     button = st.button("Upload Image")
     if button and image:
