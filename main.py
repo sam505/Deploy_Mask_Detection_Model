@@ -10,11 +10,6 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
-model = tf.keras.models.load_model("models/model")
-logger.info("Loaded the Mask Detection Model...")
-
-fd = FaceDetector()
-
 
 def main():
     """
@@ -24,6 +19,7 @@ def main():
     st.set_page_config(page_title="Mask Detection Using Tensorflow", page_icon=None, layout='centered',
                        initial_sidebar_state='auto')
     st.title("Mask Detection Using Tensorflow")
+    model, fd = load_models()
     image = st.file_uploader(label="Upload an Image with your face", type=['png', 'jpg', 'jpeg'])
     button = st.button("Upload Image")
     if button and image:
@@ -40,7 +36,7 @@ def main():
                 face_img = img[facebox[1]: facebox[3], facebox[0]: facebox[2]]
                 img = cv2.rectangle(img, (facebox[0], facebox[1]), (facebox[2], facebox[3]), (0, 255, 0))
                 st.image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-                results = predict(face_img).flatten()
+                results = predict(face_img, model).flatten()
                 results = tf.nn.sigmoid(results)
                 results = tf.where(results < 0.5, 0, 1)
 
@@ -52,6 +48,16 @@ def main():
                 st.text(text)
         os.remove(img_dir)
     pass
+
+
+@st.cache_resource
+def load_models():
+    model = tf.keras.models.load_model("models/model")
+    logger.info("Loaded the Mask Detection Model...")
+
+    fd = FaceDetector()
+
+    return model, fd
 
 
 def save_uploaded_file(uploaded_file):
@@ -68,7 +74,7 @@ def save_uploaded_file(uploaded_file):
     return file_name
 
 
-def predict(img):
+def predict(img, model):
     """
     Taken the preprocessed image and gets a prediction from the trained model
     :param img:
