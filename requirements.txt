@@ -1,4 +1,5 @@
 streamlit
 tensorflow
 watchdog
+opencv-python
 protobuf==3.20.1
